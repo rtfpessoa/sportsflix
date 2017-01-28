@@ -1,0 +1,11 @@
+machine:
+  ruby:
+    version: 2.3.1
+dependencies:
+  override:
+    - gem install bundler -v 1.14.3
+    - bundle check || bundle install
+test:
+  override:
+    - bundle exec rubocop
+    - bundle exec rake
