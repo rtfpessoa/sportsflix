@@ -21,9 +21,10 @@ Gem::Specification.new do |spec|
   if spec.respond_to?(:metadata)
     # spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
   else
-    raise 'RubyGems 2.0 or newer is required to protect against ' \
-      'public gem pushes.'
+    raise 'RubyGems 2.0 or newer is required to protect against public gem pushes.'
   end
+
+  spec.required_ruby_version = '>= 1.9.3'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
@@ -33,15 +34,17 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Development
-  spec.add_development_dependency 'bundler', '~> 1.14'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'bundler', ['~> 1.14']
+  spec.add_development_dependency 'rake', ['~> 10.0']
+  spec.add_development_dependency 'rspec', ['~> 3.0']
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'codacy-coverage'
 
   # Linters
-  spec.add_development_dependency 'rubocop', '~> 0.47.1'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.10'
+  spec.add_development_dependency 'rubocop', ['~> 0.47.1']
+  spec.add_development_dependency 'rubocop-rspec', ['~> 1.10']
 
   # Runtime
-  spec.add_runtime_dependency 'thor', '~> 0.19.4'
-  spec.add_runtime_dependency 'oga', '~> 2.8'
+  spec.add_runtime_dependency 'thor', ['~> 0.19.4']
+  spec.add_runtime_dependency 'oga', ['~> 2.8']
 end

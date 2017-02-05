@@ -1,12 +1,24 @@
 # sportsflix
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/076d315d3b5443918eb89841f265019d)](https://www.codacy.com/app/rtfpessoa/sportsflix?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/sportsflix&utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/076d315d3b5443918eb89841f265019d)](https://www.codacy.com/app/rtfpessoa/sportsflix?utm_source=github.com&utm_medium=referral&utm_content=rtfpessoa/sportsflix&utm_campaign=Badge_Coverage)
+[![CircleCI](https://circleci.com/gh/rtfpessoa/sportsflix.svg?style=svg)](https://circleci.com/gh/rtfpessoa/sportsflix)
+
 Watch the best sports stream in HD from the command line
+
+## Prerequisite
+
+* Docker
+* Ruby 1.9.3 or newer
+* VLC player
 
 ## Installation
 
 ```sh
-gem install sportsflix
+gem install sportsflix --pre
 ```
+
+> Notice the `--pre` in the end
 
 ## Usage
 
@@ -29,7 +41,7 @@ sflix watch --video-player-path="/Applications/VLC.app/Contents/MacOS/VLC"
       sflix watch           # watch stream in the chosen player
     
     Options:
-      vvv, [--verbose], [--no-verbose]
+          [--verbose], [--no-verbose]
       o, [--offset=N]
                                                    # Default: 0
       f, [--video-format=VIDEO-FORMAT]
@@ -37,14 +49,16 @@ sflix watch --video-player-path="/Applications/VLC.app/Contents/MacOS/VLC"
       c, [--club=CLUB]
       p, [--video-player=VIDEO-PLAYER]
                                                    # Default: vlc
-      pp, [--video-player-path=VIDEO-PLAYER-PATH]
+          [--video-player-path=VIDEO-PLAYER-PATH]
                                                    # Default: vlc
-      ni, [--no-interactive]
+          [--interactive], [--no-interactive]
       s, [--server-only], [--no-server-only]
+          [--proxy-delay=N]
+                                                   # Default: 10
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
