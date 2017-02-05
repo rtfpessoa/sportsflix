@@ -11,6 +11,7 @@ module Sportsflix
     DEFAULT_VIDEO_FORMAT      = 'mp4'
     DEFAULT_VIDEO_PLAYER      = 'vlc'
     DEFAULT_VIDEO_PLAYER_PATH = DEFAULT_VIDEO_PLAYER
+    DEFAULT_PROXY_DELAY       = 10
 
     class_option('verbose', { :aliases => :vvv, :type => :boolean, :default => false })
     class_option('offset', { :aliases => :o, :type => :numeric, :default => DEFAULT_OFFSET })
@@ -20,6 +21,7 @@ module Sportsflix
     class_option('video-player-path', { :aliases => :pp, :type => :string, :default => DEFAULT_VIDEO_PLAYER_PATH })
     class_option('no-interactive', { :aliases => :ni, :type => :boolean, :default => false })
     class_option('server-only', { :aliases => :s, :type => :boolean, :default => false })
+    class_option('proxy-delay', { :aliases => :pd, :type => :numeric, :default => DEFAULT_PROXY_DELAY })
 
     desc('watch', 'watch stream in the chosen player')
     def watch

@@ -18,6 +18,7 @@ module Sportsflix
           @verbose           = options[:verbose]
           @server_only       = options['server-only']
           @video_player_path = options['video-player-path']
+          @proxy_delay       = options['proxy-delay']
 
           @executor       = Sportsflix::Utils::Executor.new(options)
           @stream_proxies = {
@@ -33,7 +34,8 @@ module Sportsflix
           proxy.start
 
           # Waiting for proxy to start
-          sleep(10)
+          puts "Waiting for proxy to start (#{@proxy_delay})..."
+          sleep(@proxy_delay)
 
           unless @server_only
             video_player     = find_video_player
