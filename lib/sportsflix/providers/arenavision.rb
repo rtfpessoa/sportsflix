@@ -54,7 +54,7 @@ module Sportsflix
           url  = URI.parse(raw_url)
           enum = Enumerator.new do |yielder|
             Net::HTTP.start(url.host, url.port) do |http|
-              http.request_get(url.path) do |response|
+              http.request_get(url.path, { 'Cookie' => 'beget=begetok;' }) do |response|
                 response.read_body do |chunk|
                   yielder << chunk
                 end
