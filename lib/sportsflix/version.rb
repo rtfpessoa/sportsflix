@@ -1,3 +1,3 @@
 module Sportsflix
-  VERSION = '0.1.0.alpha.4'
+  VERSION = '1.0.0.alpha.2'
 end

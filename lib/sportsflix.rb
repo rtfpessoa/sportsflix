@@ -8,11 +8,11 @@ module Sportsflix
   class API
 
     def initialize(options)
-      @verbose        = options[:verbose]
-      @stream_offset  = options[:offset]
-      @club_name      = options[:club]
-      @no_interactive = options['no-interactive']
-      @video_player   = options['video-player'].to_sym
+      @verbose       = options[:verbose]
+      @stream_offset = options[:offset]
+      @club_name     = options[:club]
+      @interactive   = options['interactive']
+      @video_player  = options['video-player'].to_sym
 
       @arenavision_client = Providers::Arenavision::Client.new(options)
       @executor           = Sportsflix::Utils::Executor.new(options)
@@ -68,7 +68,7 @@ module Sportsflix
       if streams.empty?
         puts "There are no streams matching your query #{@club_name}"
         exit(1)
-      elsif streams.length > 1 && !@no_interactive
+      elsif streams.length > 1 && @interactive
         streams.each_with_index do |stream, idx|
           puts "#{idx}) #{stream[:game]}"
         end
@@ -82,7 +82,7 @@ module Sportsflix
 
     def ask_language(stream_channels)
       channel_selection = 0
-      if stream_channels.length > 1 && !@no_interactive
+      if stream_channels.length > 1 && @interactive
         stream_channels.each_with_index do |channel, idx|
           puts "#{idx}) #{channel[:language]}"
         end
@@ -96,7 +96,7 @@ module Sportsflix
 
     def ask_channel(stream_channels)
       stream_channel_nr = stream_channels[:start]
-      if stream_channels[:start] != stream_channels[:end] && !@no_interactive
+      if stream_channels[:start] != stream_channels[:end] && @interactive
         possible_channels = (stream_channels[:start]..stream_channels[:end]).to_a
         possible_channels.each_with_index do |nr, idx|
           if @stream_offset == idx
