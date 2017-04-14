@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sportsflix (1.0.0.alpha.2)
+    sportsflix (1.0.0)
       oga (~> 2.8)
       thor (~> 0.19.4)
 

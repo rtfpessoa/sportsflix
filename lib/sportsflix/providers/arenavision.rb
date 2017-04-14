@@ -12,14 +12,15 @@ module Sportsflix
           @verbose     = options[:verbose]
           @club_name   = options[:club]
           @server_only = options['server-only']
-
-          @schedule = get_page_contents("#{ARENAVISION_BASE_URL[ARENAVISION_DEFAULT_URL_IDX]}/schedule")
         end
 
         def list_streams
-          streams = @schedule.css('table tr')
+          home = get_page_contents("#{ARENAVISION_BASE_URL[ARENAVISION_DEFAULT_URL_IDX]}/")
+          schedule_path = home.css('.menu li a').select {|item| item.text.include?('EVENTS GUIDE')}.first.get('href')
+          schedule = get_page_contents("#{ARENAVISION_BASE_URL[ARENAVISION_DEFAULT_URL_IDX]}#{schedule_path}")
+          streams  = schedule.css('table tr')
           # Remove first element
-          streams = streams.drop(1)
+          streams  = streams.drop(1)
           # Remove last element
           streams.pop(2)
 
@@ -54,7 +55,7 @@ module Sportsflix
           url  = URI.parse(raw_url)
           enum = Enumerator.new do |yielder|
             Net::HTTP.start(url.host, url.port) do |http|
-              http.request_get(url.path, { 'Cookie' => 'beget=begetok;' }) do |response|
+              http.request_get(url.path, {'Cookie' => 'beget=begetok;'}) do |response|
                 response.read_body do |chunk|
                   yielder << chunk
                 end
