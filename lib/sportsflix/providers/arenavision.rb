@@ -5,22 +5,23 @@ module Sportsflix
   module Providers
     module Arenavision
       class Client
-        ARENAVISION_BASE_URL        = ['http://arenavision.in', 'http://arenavision.ru']
-        ARENAVISION_DEFAULT_URL_IDX = 0
+        BASE_URLS = ['http://arenavision.in', 'http://arenavision.ru']
+        BASE_URL  = BASE_URLS.sample
 
         def initialize(options)
           @verbose     = options[:verbose]
           @club_name   = options[:club]
           @server_only = options['server-only']
+          @http        = Sportsflix::Utils::HTTP.new
         end
 
         def list_streams
-          home = get_page_contents("#{ARENAVISION_BASE_URL[ARENAVISION_DEFAULT_URL_IDX]}/")
-          schedule_path = home.css('.menu li a').select {|item| item.text.include?('EVENTS GUIDE')}.first.get('href')
-          schedule = get_page_contents("#{ARENAVISION_BASE_URL[ARENAVISION_DEFAULT_URL_IDX]}#{schedule_path}")
-          streams  = schedule.css('table tr')
+          home          = get_page_contents("#{BASE_URL}/")
+          schedule_path = home.css('a').select {|item| item.text.include?('EVENTS GUIDE')}.first.get('href')
+          schedule      = get_page_contents("#{BASE_URL}#{schedule_path}")
+          streams       = schedule.css('table tr')
           # Remove first element
-          streams  = streams.drop(1)
+          streams       = streams.drop(1)
           # Remove last element
           streams.pop(2)
 
@@ -46,24 +47,14 @@ module Sportsflix
         end
 
         def get_stream_uri(stream_nr)
-          stream_raw = get_page_contents("#{ARENAVISION_BASE_URL[ARENAVISION_DEFAULT_URL_IDX]}/av#{stream_nr}")
+          stream_raw = get_page_contents("#{BASE_URL}/av#{stream_nr}")
           stream_raw.css('p[class="auto-style1"] a').first.get('href')
         end
 
         private
         def get_page_contents(raw_url)
-          url  = URI.parse(raw_url)
-          enum = Enumerator.new do |yielder|
-            Net::HTTP.start(url.host, url.port) do |http|
-              http.request_get(url.path, {'Cookie' => 'beget=begetok;'}) do |response|
-                response.read_body do |chunk|
-                  yielder << chunk
-                end
-              end
-            end
-          end
-
-          Oga.parse_xml(enum)
+          html_str = @http.get(raw_url, {}, {Cookie: 'beget=begetok;'}).body
+          Oga.parse_xml(html_str)
         end
 
         def parse_stream_ids(raw_stream)

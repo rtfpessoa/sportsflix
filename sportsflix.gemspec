@@ -47,4 +47,5 @@ Gem::Specification.new do |spec|
   # Runtime
   spec.add_runtime_dependency 'thor', ['~> 0.19.4']
   spec.add_runtime_dependency 'oga', ['~> 2.8']
+  spec.add_runtime_dependency 'execjs-fastnode', ['~> 0.2.0']
 end
