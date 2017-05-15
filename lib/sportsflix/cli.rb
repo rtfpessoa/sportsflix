@@ -22,6 +22,7 @@ module Sportsflix
     class_option('interactive', { :type => :boolean, :default => false })
     class_option('server-only', { :aliases => :s, :type => :boolean, :default => false })
     class_option('proxy-delay', { :type => :numeric, :default => DEFAULT_PROXY_DELAY })
+    class_option('server-ip', { :type => :string })
 
     desc('watch', 'watch stream in the chosen player')
     def watch

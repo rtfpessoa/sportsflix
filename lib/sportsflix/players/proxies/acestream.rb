@@ -14,6 +14,7 @@ module Sportsflix
           def initialize(options)
             @verbose      = options[:verbose]
             @video_format = options['video-format']
+            @server_ip    = options['server-ip']
 
             @executor = Sportsflix::Utils::Executor.new(options)
           end
@@ -29,11 +30,15 @@ module Sportsflix
 
           def url(uri)
             stream_uuid = uri.sub(ACESTREAM_STREAM_URI_PREFIX, '')
-            machine_ip  = local_ip
+            machine_ip  = @server_ip || get_ip_from_host || local_ip
             "http://#{machine_ip}:8000/pid/#{stream_uuid}/stream.#{@video_format}"
           end
 
           private
+          def get_ip_from_host
+            ENV['DOCKER_HOST'].gsub(/tcp:\/\/(\S+?):.+/,'\1') if ENV['DOCKER_HOST']
+          end
+
           def local_ip
             # Turn off reverse DNS resolution temporarily
             orig                         = Socket.do_not_reverse_lookup
