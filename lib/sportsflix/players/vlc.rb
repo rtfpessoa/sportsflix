@@ -37,11 +37,11 @@ module Sportsflix
           puts "Waiting for proxy to start (#{@proxy_delay})..."
           sleep(@proxy_delay)
 
-          unless @server_only
-            video_player     = find_video_player
-            stream_final_url = proxy.url(stream[:uri])
+          stream_final_url = proxy.url(stream[:uri])
+          puts "Playing #{stream_final_url}"
 
-            puts "Playing #{stream_final_url}"
+          unless @server_only
+            video_player = find_video_player
             @executor.run %{#{video_player} #{stream_final_url}}
 
             proxy.stop
@@ -72,7 +72,7 @@ module Sportsflix
         def which(cmd)
           exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
           ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
-            exts.each { |ext|
+            exts.each {|ext|
               bin = File.join(path, "#{cmd}#{ext}")
               return File.executable?(bin) && !File.directory?(bin)
             }
