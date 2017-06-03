@@ -5,7 +5,7 @@ module Sportsflix
   module Providers
     module Arenavision
       class Client
-        BASE_URLS = ['http://arenavision.in', 'http://arenavision.ru']
+        BASE_URLS = ['https://arenavision.in', 'https://arenavision.ru']
         BASE_URL  = BASE_URLS.sample
 
         def initialize(options)

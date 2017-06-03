@@ -57,29 +57,32 @@ module Sportsflix
 
       private
       def with_cf_bypass(res, req_lambda)
-        if res.is_a?(Net::HTTPServiceUnavailable) &&
+        if res.is_a?(Net::HTTPRedirection)
+          puts "Redirecting from #{res.uri.to_s} to #{res['location']}."
+          res
+        elsif res.is_a?(Net::HTTPServiceUnavailable) &&
             res['Server'] == 'cloudflare-nginx' &&
             res.body.include?('jschl_vc') &&
             res.body.include?('jschl_answer')
 
-          url ="#{res.uri.scheme}://#{res.uri.hostname}"
+          url = "#{res.uri.scheme}://#{res.uri.hostname}"
           if res.uri.port
             url = "#{url}:#{res.uri.port}"
           end
 
           url = "#{url}/cdn-cgi/l/chk_jschl"
 
-          @headers = @headers.merge({Referer: res.url})
+          @headers = @headers.merge({Referer: res.uri.to_s})
           @params  = @params.merge(
               {
-                  jschl_vc:     /name="jschl_vc" value="(\w+)"/.match(body),
-                  pass:         /name="pass" value="(.+?)"/.match(body),
-                  jschl_answer: "#{solve_challenge(body)}#{res.hostname.size}"
+                  jschl_vc:     /name="jschl_vc" value="(\w+)"/.match(res.body),
+                  pass:         /name="pass" value="(.+?)"/.match(res.body),
+                  jschl_answer: "#{solve_challenge(res.body)}#{res.hostname.size}"
               }
           )
 
           redirect = req_lambda.call(url)
-          req_lambda.call(redirect['Location'])
+          req_lambda.call(redirect['location'])
         else
           res
         end
