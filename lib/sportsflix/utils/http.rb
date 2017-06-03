@@ -57,20 +57,8 @@ module Sportsflix
 
       private
       def with_cf_bypass(res, req_lambda)
-        if res.is_a?(Net::HTTPRedirection)
-          puts "Redirecting from #{res.uri.to_s} to #{res['location']}."
-          res
-        elsif res.is_a?(Net::HTTPServiceUnavailable) &&
-            res['Server'] == 'cloudflare-nginx' &&
-            res.body.include?('jschl_vc') &&
-            res.body.include?('jschl_answer')
-
-          url = "#{res.uri.scheme}://#{res.uri.hostname}"
-          if res.uri.port
-            url = "#{url}:#{res.uri.port}"
-          end
-
-          url = "#{url}/cdn-cgi/l/chk_jschl"
+        if needs_cf_answer(res)
+          url = "#{res.uri.scheme}://#{res.uri.hostname}:#{res.uri.port}/cdn-cgi/l/chk_jschl"
 
           @headers = @headers.merge({Referer: res.uri.to_s})
           @params  = @params.merge(
@@ -84,8 +72,19 @@ module Sportsflix
           redirect = req_lambda.call(url)
           req_lambda.call(redirect['location'])
         else
+          if res.is_a?(Net::HTTPRedirection)
+            puts "Redirecting from #{res.uri} to #{res['location']}."
+          end
+
           res
         end
+      end
+
+      def needs_cf_answer(res)
+        res.is_a?(Net::HTTPServiceUnavailable) &&
+            res['Server'] == 'cloudflare-nginx' &&
+            res.body.include?('jschl_vc') &&
+            res.body.include?('jschl_answer')
       end
 
       def solve_challenge(body)
