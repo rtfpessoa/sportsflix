@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
     f.match(%r{^(test|spec|features)/})
   end
   spec.bindir        = 'bin'
-  spec.executables   = 'sflix'
+  spec.executables   = ['sportsflix', 'sflix']
   spec.require_paths = ['lib']
 
   # Development

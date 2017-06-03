@@ -1,5 +1,3 @@
 #!/usr/bin/env ruby
 
-require "sportsflix/cli"
-
-Sportsflix::CLI.start(ARGV)
+load File.expand_path('../sportsflix', __FILE__)
