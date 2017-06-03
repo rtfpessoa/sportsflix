@@ -6,22 +6,21 @@ module Sportsflix
       module Acestream
         class Client
 
-          ACESTREAM_STREAM_URI_PREFIX    = 'acestream://'
-          ACESTREAM_PROXY_IMAGE_NAME     = ['ikatson/aceproxy', 'zveronline/aceproxy']
-          ACESTREAM_PROXY_IMAGE_NAME_IDX = 0
-          ACESTREAM_PROXY_DOCKER_NAME    = 'acestream'
+          ACESTREAM_STREAM_URI_PREFIX = 'acestream://'
+          ACESTREAM_PROXY_DOCKER_NAME = 'acestream'
 
           def initialize(options)
             @verbose      = options[:verbose]
             @video_format = options['video-format']
             @server_ip    = options['server-ip']
+            @proxy_image  = options['acestream-proxy-image']
 
             @executor = Sportsflix::Utils::Executor.new(options)
           end
 
           def start
-            @executor.run %{docker pull #{ACESTREAM_PROXY_IMAGE_NAME[ACESTREAM_PROXY_IMAGE_NAME_IDX]}}
-            @executor.run %{docker run -d -t -p 8000:8000 --name #{ACESTREAM_PROXY_DOCKER_NAME} #{ACESTREAM_PROXY_IMAGE_NAME[ACESTREAM_PROXY_IMAGE_NAME_IDX]}}
+            @executor.run %{docker pull #{@proxy_image}}
+            @executor.run %{docker run -d -t -p 8000:8000 --name #{ACESTREAM_PROXY_DOCKER_NAME} #{@proxy_image}}
           end
 
           def stop
@@ -36,7 +35,7 @@ module Sportsflix
 
           private
           def get_ip_from_host
-            ENV['DOCKER_HOST'].gsub(/tcp:\/\/(\S+?):.+/,'\1') if ENV['DOCKER_HOST']
+            ENV['DOCKER_HOST'].gsub(/tcp:\/\/(\S+?):.+/, '\1') if ENV['DOCKER_HOST']
           end
 
           def local_ip

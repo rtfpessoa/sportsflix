@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sportsflix (1.2.4)
+    sportsflix (1.2.5)
       execjs-fastnode (~> 0.2.0)
       oga (~> 2.8)
       thor (~> 0.19.4)
