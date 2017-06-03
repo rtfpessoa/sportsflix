@@ -1,4 +1,4 @@
-require 'net/http'
+require 'net/https'
 require 'execjs'
 
 module Sportsflix
@@ -28,9 +28,9 @@ module Sportsflix
         uri.query = URI.encode_www_form(@params.merge(extra_params))
         req       = Net::HTTP::Get.new(uri, @headers.merge(extra_headers))
 
-        res = Net::HTTP.start(uri.hostname, uri.port) {|http|
-          http.request(req)
-        }
+        session         = Net::HTTP.new(uri.host, uri.port)
+        session.use_ssl = true if req.uri.scheme == 'https'
+        res             = session.start {|http| http.request(req)}
 
         get_lambda = lambda {|url| get(url, extra_params, extra_headers)}
 
@@ -45,20 +45,19 @@ module Sportsflix
                              .merge(extra_headers)
         req            = Net::HTTP::Post.new(uri, merged_headers)
 
-        res = Net::HTTP.start(uri.hostname, uri.port) {|http|
-          http.request(req)
-        }
+        session         = Net::HTTP.new(uri.host, uri.port)
+        session.use_ssl = true if req.uri.scheme == 'https'
+        res             = session.start {|http| http.request(req)}
 
         post_lambda = lambda {|url| post(url, body, extra_params, extra_headers)}
 
-        bypassed_res = with_cf_bypass(res, post_lambda)
-        bypassed_res.body
+        with_cf_bypass(res, post_lambda)
       end
 
       private
       def with_cf_bypass(res, req_lambda)
         if needs_cf_answer(res)
-          url = "#{res.uri.scheme}://#{res.uri.hostname}:#{res.uri.port}/cdn-cgi/l/chk_jschl"
+          url = "#{res.uri.scheme}://#{res.uri.hostname}/cdn-cgi/l/chk_jschl"
 
           @headers = @headers.merge({Referer: res.uri.to_s})
           @params  = @params.merge(
@@ -74,9 +73,10 @@ module Sportsflix
         else
           if res.is_a?(Net::HTTPRedirection)
             puts "Redirecting from #{res.uri} to #{res['location']}."
+            req_lambda.call(res['location'])
+          else
+            res
           end
-
-          res
         end
       end
 
