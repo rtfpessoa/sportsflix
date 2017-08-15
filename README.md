@@ -11,14 +11,13 @@ Watch the best sports stream in HD from the command line
 * Docker
 * Ruby 1.9.3 or newer
 * VLC player
+* NodeJS
 
 ## Installation
 
 ```sh
-gem install sportsflix --pre
+gem install sportsflix
 ```
-
-> Notice the `--pre` in the end
 
 ## Usage
 
