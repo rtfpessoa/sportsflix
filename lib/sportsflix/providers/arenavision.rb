@@ -5,7 +5,7 @@ module Sportsflix
   module Providers
     module Arenavision
       class Client
-        BASE_URLS = ['https://arenavision.in', 'https://arenavision.ru']
+        BASE_URLS = ['http://arenavision.in', 'http://arenavision.ru']
         BASE_URL  = BASE_URLS.sample
 
         def initialize(options)
@@ -21,7 +21,7 @@ module Sportsflix
           schedule      = get_page_contents("#{BASE_URL}#{schedule_path}")
           streams       = schedule.css('table tr')
           # Remove first element
-          streams       = streams.drop(1)
+          streams = streams.drop(1)
           # Remove last element
           streams.pop(2)
 
@@ -29,7 +29,7 @@ module Sportsflix
           streams = streams.select do |item|
             item_text = item.css('td:nth-child(1)').text
             item_text = item_text.force_encoding('UTF-8')
-            item_text =item_text.delete(' ').strip
+            item_text = item_text.delete(' ').strip
             not item_text.empty?
           end
 
@@ -47,7 +47,7 @@ module Sportsflix
         end
 
         def get_stream_uri(stream_nr)
-          stream_raw = get_page_contents("#{BASE_URL}/av#{stream_nr}")
+          stream_raw = get_page_contents("#{BASE_URL}/#{stream_nr}")
           stream_raw.css('p[class="auto-style1"] a').first.get('href')
         end
 
