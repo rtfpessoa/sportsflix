@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sportsflix (1.2.6)
+    sportsflix (1.2.7)
       execjs-fastnode (~> 0.2.0)
       oga (~> 2.8)
       thor (~> 0.19.4)
@@ -19,7 +19,7 @@ GEM
     execjs-fastnode (0.2.1)
       execjs (~> 2.0)
     json (2.0.3)
-    oga (2.10)
+    oga (2.11)
       ast
       ruby-ll (~> 2.1)
     parser (2.3.3.1)
@@ -74,4 +74,4 @@ DEPENDENCIES
   sportsflix!
 
 BUNDLED WITH
-   1.15.3
+   1.15.4

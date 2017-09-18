@@ -47,7 +47,7 @@ module Sportsflix
         end
 
         def get_stream_uri(stream_nr)
-          stream_raw = get_page_contents("#{BASE_URL}/#{stream_nr}")
+          stream_raw = get_page_contents("#{BASE_URL}/#{stream_nr.to_s.rjust(2, '0')}")
           stream_raw.css('p[class="auto-style1"] a').first.get('href')
         end
 
