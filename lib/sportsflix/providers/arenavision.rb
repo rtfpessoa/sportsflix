@@ -5,7 +5,7 @@ module Sportsflix
   module Providers
     module Arenavision
       class Client
-        BASE_URLS = ['http://arenavision.in', 'http://arenavision.ru']
+        BASE_URLS = ['http://arenavision.in', 'http://arenavision.ru', 'http://arenavision.us']
         BASE_URL  = BASE_URLS.sample
 
         def initialize(options)
@@ -17,8 +17,13 @@ module Sportsflix
 
         def list_streams
           home          = get_page_contents("#{BASE_URL}/")
-          schedule_path = home.css('a').select {|item| item.text.include?('EVENTS GUIDE')}.first.get('href')
-          schedule      = get_page_contents("#{BASE_URL}#{schedule_path}")
+          schedule_path = home.css('a').select { |item| item.text.include?('EVENTS GUIDE') }.first.get('href')
+          schedule_url  = if schedule_path.start_with?("http")
+                            schedule_path
+                          else
+                            "#{BASE_URL}#{schedule_path}"
+                          end
+          schedule      = get_page_contents(schedule_url)
           streams       = schedule.css('table tr')
           # Remove first element
           streams = streams.drop(1)
@@ -35,25 +40,28 @@ module Sportsflix
 
           streams.map do |item|
             {
-                :date        => clean_str(item.css('td:nth-child(1)').text),
-                :hour        => clean_str(item.css('td:nth-child(2)').text),
-                :sport       => clean_str(item.css('td:nth-child(3)').text),
-                :competition => clean_str(item.css('td:nth-child(4)').text),
-                :game        => clean_str(item.css('td:nth-child(5)').text),
-                :stream_nr   => parse_stream_ids(clean_str(item.css('td:nth-child(6)').text)),
-                :proxy       => :acestream
+              :date        => clean_str(item.css('td:nth-child(1)').text),
+              :hour        => clean_str(item.css('td:nth-child(2)').text),
+              :sport       => clean_str(item.css('td:nth-child(3)').text),
+              :competition => clean_str(item.css('td:nth-child(4)').text),
+              :game        => clean_str(item.css('td:nth-child(5)').text),
+              :stream_nr   => parse_stream_ids(clean_str(item.css('td:nth-child(6)').text)),
+              :proxy       => :acestream
             }
           end
         end
 
         def get_stream_uri(stream_nr)
-          stream_raw = get_page_contents("#{BASE_URL}/#{stream_nr.to_s.rjust(2, '0')}")
-          stream_raw.css('p[class="auto-style1"] a').first.get('href')
+          home = get_page_contents("#{BASE_URL}/")
+          stream_link = home.css('a').select { |item| item.text.include?("ArenaVision #{stream_nr}") }.first.get('href')
+          stream_raw  = get_page_contents(stream_link)
+          stream_raw.css('a').select { |item| !item.get('href').nil? && item.get('href').include?('acestream://') }.first.get('href')
         end
 
         private
+
         def get_page_contents(raw_url)
-          html_str = @http.get(raw_url, {}, {Cookie: 'beget=begetok;'}).body
+          html_str = @http.get(raw_url, {}, { Cookie: 'beget=begetok;' }).body
           Oga.parse_xml(html_str)
         end
 
@@ -61,17 +69,17 @@ module Sportsflix
           matches = raw_stream.scan(/(([0-9]+)(?:-([0-9]+))? \[(.+?)\])/)
           matches.map do |match|
             {
-                :start    => match[1].to_i,
-                :end      => (match[2] || match[1]).to_i,
-                :language => match[3]
+              :start    => match[1].to_i,
+              :end      => (match[2] || match[1]).to_i,
+              :language => match[3]
             }
           end
         end
 
         def clean_str(str)
           str.force_encoding('UTF-8')
-              .gsub("\n\t\t", ' ')
-              .strip
+            .gsub("\n\t\t", ' ')
+            .strip
         end
 
       end
