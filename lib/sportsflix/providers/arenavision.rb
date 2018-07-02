@@ -35,7 +35,10 @@ module Sportsflix
             item_text = item.css('td:nth-child(1)').text
             item_text = item_text.force_encoding('UTF-8')
             item_text = item_text.delete(' ').strip
-            not item_text.empty?
+
+            script_text = item.css('td:nth-child(1) script').text
+
+            not item_text.empty? and script_text.empty?
           end
 
           streams.map do |item|
@@ -51,9 +54,9 @@ module Sportsflix
           end
         end
 
-        def get_stream_uri(stream_nr)
-          home = get_page_contents("#{BASE_URL}/")
-          stream_link = home.css('a').select { |item| item.text.include?("ArenaVision #{stream_nr}") }.first.get('href')
+        def get_stream_uri(stream_nr, event)
+          home        = get_page_contents("#{BASE_URL}/")
+          stream_link = home.css('a').select { |item| item.text.include?("#{event} #{stream_nr}") }.first.get('href')
           stream_raw  = get_page_contents(stream_link)
           stream_raw.css('a').select { |item| !item.get('href').nil? && item.get('href').include?('acestream://') }.first.get('href')
         end
@@ -66,12 +69,17 @@ module Sportsflix
         end
 
         def parse_stream_ids(raw_stream)
-          matches = raw_stream.scan(/(([0-9]+)(?:-([0-9]+))? \[(.+?)\])/)
+          matches = raw_stream.scan(/(([W]?[0-9]+)(?:-([W]?[0-9]+))? \[(.+?)\])/)
           matches.map do |match|
             {
-              :start    => match[1].to_i,
-              :end      => (match[2] || match[1]).to_i,
-              :language => match[3]
+              :start    => match[1].delete("W").to_i,
+              :end      => (match[2] || match[1]).delete("W").to_i,
+              :language => match[3],
+              :event    => if match[1].start_with?("W")
+                             "World Cup"
+                           else
+                             "ArenaVision"
+                           end
             }
           end
         end

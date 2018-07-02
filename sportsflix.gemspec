@@ -34,18 +34,18 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Development
-  spec.add_development_dependency 'bundler', ['~> 1.14']
-  spec.add_development_dependency 'rake', ['~> 10.0']
-  spec.add_development_dependency 'rspec', ['~> 3.0']
+  spec.add_development_dependency 'bundler', ['~> 1.16']
+  spec.add_development_dependency 'rake', ['~> 12.3']
+  spec.add_development_dependency 'rspec', ['~> 3.7']
   spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'codacy-coverage'
 
   # Linters
-  spec.add_development_dependency 'rubocop', ['~> 0.47.1']
-  spec.add_development_dependency 'rubocop-rspec', ['~> 1.10']
+  spec.add_development_dependency 'rubocop', ['~> 0.57.2']
+  spec.add_development_dependency 'rubocop-rspec', ['~> 1.27']
 
   # Runtime
-  spec.add_runtime_dependency 'thor', ['~> 0.19.4']
-  spec.add_runtime_dependency 'oga', ['~> 2.8']
-  spec.add_runtime_dependency 'execjs-fastnode', ['~> 0.2.0']
+  spec.add_runtime_dependency 'thor', ['~> 0.20.0']
+  spec.add_runtime_dependency 'oga', ['~> 2.15']
+  spec.add_runtime_dependency 'execjs-fastnode', ['~> 0.2.1']
 end
