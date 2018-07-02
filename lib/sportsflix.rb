@@ -17,7 +17,7 @@ module Sportsflix
       @arenavision_client = Providers::Arenavision::Client.new(options)
       @executor           = Sportsflix::Utils::Executor.new(options)
       @players            = {
-          :vlc => Sportsflix::Players::VLC::Client.new(options)
+        :vlc => Sportsflix::Players::VLC::Client.new(options)
       }
     end
 
@@ -32,7 +32,7 @@ module Sportsflix
 
       response = ask_choose_stream(streams)
 
-      stream_uri = @arenavision_client.get_stream_uri(response[:channel_number])
+      stream_uri = @arenavision_client.get_stream_uri(response[:channel_number], response[:event])
 
       unless @players.key?(@video_player)
         puts "Unable to find client for #{@video_player} player"
@@ -41,12 +41,13 @@ module Sportsflix
 
       player = @players[@video_player]
       player.start({
-                       :proxy => response[:stream][:proxy],
-                       :uri   => stream_uri
+                     :proxy => response[:stream][:proxy],
+                     :uri   => stream_uri
                    })
     end
 
     private
+
     def ask_choose_stream(streams)
       selection       = ask_stream(streams)
       selected_stream = streams[selection]
@@ -58,8 +59,9 @@ module Sportsflix
       stream_channel_nr = ask_channel(stream_channels)
 
       {
-          :stream         => selected_stream,
-          :channel_number => stream_channel_nr
+        :stream         => selected_stream,
+        :channel_number => stream_channel_nr,
+        :event          => stream_channels[:event]
       }
     end
 
