@@ -9,9 +9,8 @@ Watch the best sports stream in HD from the command line
 ## Prerequisite
 
 * Docker
-* Ruby 1.9.3 or newer
+* Ruby 2.3.7 or newer
 * VLC player
-* NodeJS
 
 ## Installation
 
