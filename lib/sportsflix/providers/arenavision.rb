@@ -64,7 +64,14 @@ module Sportsflix
         private
 
         def get_page_contents(raw_url)
-          html_str = @http.get(raw_url, {}, { Cookie: 'beget=begetok;' }).body
+          html_str = @http.get(raw_url, {}, {
+              'Cookie': 'beget=begetok;',
+              'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+              'Accept-Language': 'en-GB,pt;q=0.5',
+              'DNT': '1',
+              'Connection': 'keep-alive'
+          }).body
           Oga.parse_xml(html_str)
         end
 

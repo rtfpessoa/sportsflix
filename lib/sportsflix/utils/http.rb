@@ -82,11 +82,12 @@ module Sportsflix
 
       def needs_cf_answer(res)
         res.is_a?(Net::HTTPServiceUnavailable) &&
-            res['Server'] == 'cloudflare-nginx' &&
+            res['Server'].include?('cloudflare') &&
             res.body.include?('jschl_vc') &&
             res.body.include?('jschl_answer')
       end
 
+      # Source: https://github.com/Anorov/cloudflare-scrape/blob/master/cfscrape/__init__.py#L115
       def solve_challenge(body)
         begin
           js = /setTimeout\(function\(\){\s+(var s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n/.match(body)
@@ -95,7 +96,7 @@ module Sportsflix
           exit(1)
         end
 
-        js = js.gsub("a\.value = (parseInt\(.+?\)).+", "\1")
+        js = js.gsub("a\.value = (.+ \+ t\.length).+", "\1")
         js = js.gsub("\s{3,}[a-z](?: = |\.).+", '')
 
         # Strip characters that could be used to exit the string context
