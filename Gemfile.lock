@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sportsflix (1.4.0)
+    sportsflix (1.5.0)
       execjs-fastnode (~> 0.2)
       oga (~> 2.15)
       therubyracer (~> 0.12)
@@ -21,7 +21,7 @@ GEM
       execjs (~> 2.0)
     jaro_winkler (1.5.2)
     json (2.2.0)
-    libv8 (3.16.14.19-x86_64-linux)
+    libv8 (3.16.14.19)
     oga (2.15)
       ast
       ruby-ll (~> 2.1)
