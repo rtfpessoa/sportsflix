@@ -46,7 +46,7 @@ Gem::Specification.new do |spec|
 
   # Runtime
   spec.add_runtime_dependency 'thor', ['~> 0.20']
-  spec.add_runtime_dependency 'oga', ['~> 2.15']
+  spec.add_runtime_dependency 'oga', '>= 2.15', '< 4.0'
   spec.add_runtime_dependency 'therubyracer', ['~> 0.12']
   spec.add_runtime_dependency 'execjs-fastnode', ['~> 0.2']
 end
