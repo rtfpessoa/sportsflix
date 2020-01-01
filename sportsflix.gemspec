@@ -45,7 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-rspec', ['~> 1.32']
 
   # Runtime
-  spec.add_runtime_dependency 'thor', ['~> 0.20']
+  spec.add_runtime_dependency 'thor', '>= 0.20', '< 2.0'
   spec.add_runtime_dependency 'oga', '>= 2.15', '< 4.0'
   spec.add_runtime_dependency 'therubyracer', ['~> 0.12']
   spec.add_runtime_dependency 'execjs-fastnode', ['~> 0.2']
