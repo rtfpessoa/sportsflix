@@ -1,0 +1,11 @@
+version = 1
+
+test_patterns = ["spec/**"]
+
+[[analyzers]]
+name = "test-coverage"
+enabled = true
+
+[[analyzers]]
+name = "ruby"
+enabled = true
